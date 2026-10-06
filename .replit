@@ -24,3 +24,7 @@ timeoutMs = 20000
 [userenv.shared]
 VITE_SUPABASE_URL = "https://yjnktlbmcjzlsotujmgi.supabase.co"
 VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlqbmt0bGJtY2p6bHNvdHVqbWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyNjQ4NzcsImV4cCI6MjEwNjg0MDg3N30.LHie5Mgu9Iax9qtvhvcdOed0RgLVwXR34MOm8vYpRtE"
+
+[nix]
+channel = "stable-25_05"
+packages = ["supabase-cli"]
