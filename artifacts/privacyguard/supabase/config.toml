@@ -1,0 +1,4 @@
+project_id = "privacyguard"
+
+[functions.privacy-assistant]
+verify_jwt = true

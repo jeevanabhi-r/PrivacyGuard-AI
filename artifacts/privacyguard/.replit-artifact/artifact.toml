@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "PrivacyGuard AI"
+description = "A digital privacy education app with secure email-based accounts, a Groq-powered AI assistant mediated by Supabase Edge Functions, saved conversation history, guides, checklists, lessons, quizzes, and practical recommendations."
+version = "1.0.0"
+id = "artifacts/privacyguard"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24251
+
+[services.development]
+run = "pnpm --filter @workspace/privacyguard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/privacyguard", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/privacyguard/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24251"
+BASE_PATH = "/"
