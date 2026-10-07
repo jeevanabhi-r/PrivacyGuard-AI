@@ -1,108 +1,131 @@
 # 🛡️ PrivacyGuard AI
 
-### A calmer, smarter way to understand and improve your digital privacy.
+## A Calm, Actionable Digital Privacy Assistant
 
-PrivacyGuard AI is an AI-powered **Digital Privacy Assistant** that helps users understand their privacy risks, identify weak areas, and take practical steps to improve their digital privacy.
+PrivacyGuard AI is an AI-powered digital privacy education and decision-support platform designed to help everyday internet users understand, assess, and improve their digital privacy.
 
-Instead of complicated privacy policies and fear-based warnings, PrivacyGuard AI provides a simple and actionable experience:
+Instead of overwhelming users with long privacy policies, complicated settings, or fear-based cybersecurity warnings, PrivacyGuard AI provides a simple and actionable journey:
 
 > **Assess → Score → Identify Risks → Explain → Act → Learn → Measure**
 
----
+The platform combines a **10-question Privacy Audit**, a **0–100 Privacy Score**, personalized risk identification, step-by-step privacy guides, interactive learning, quizzes, and an AI Privacy Assistant.
 
-## 🎯 Problem Statement
-
-### CS5 – Digital Privacy Assistant
-
-People use dozens of online services every day, but many do not know:
-
-- Which apps can access their location
-- Whether their accounts are properly secured
-- How much information they expose on social media
-- Which permissions their apps have
-- How browser tracking affects them
-- How to recognize phishing and suspicious links
-- What practical steps they should take to improve their privacy
-
-Privacy information is often complicated, scattered, and difficult for non-technical users to act on.
-
-## 💡 Our Solution
-
-PrivacyGuard AI transforms privacy awareness into a simple, actionable experience.
-
-Users can:
-
-1. Take a privacy assessment
-2. Receive a **0–100 Privacy Score**
-3. Understand their highest-risk areas
-4. Get a personalized action plan
-5. Ask an AI privacy assistant questions
-6. Learn through short lessons and quizzes
-7. Track their progress
-8. Retake the assessment and measure improvement
+Most importantly, PrivacyGuard AI follows a **zero-credential architecture**: users are guided to make privacy changes themselves rather than giving PrivacyGuard access to their passwords, OTPs, external account tokens, or private credentials.
 
 ---
 
-# ✨ Key Features
+# 🎯 Problem Statement
 
-## 🔎 Privacy Audit
+## CS5 – Digital Privacy Assistant
 
-PrivacyGuard AI provides a **10-question interactive privacy assessment** covering five important areas:
+Digital privacy has become difficult for ordinary users.
 
-- 🔐 Account Security
-- 📱 Social Media Privacy
-- 📍 Location Privacy
-- 🔑 App Permissions
-- 🌐 Browser & Tracking
+People use social media, messaging apps, browsers, location services, email, and many other online services every day. However, many users do not know:
 
-Each answer contributes to a deterministic privacy score.
+- Whether their accounts are properly protected
+- Whether they reuse passwords
+- Whether two-step authentication is enabled
+- Who can see their social media information
+- Which applications have access to sensitive permissions
+- Whether location history is being stored
+- How browser tracking works
+- What email tracking pixels are
+- How to recognize phishing attempts
+- Which privacy setting they should change first
 
-### Privacy Score
+Privacy information is often scattered across different applications and buried inside complicated settings.
 
-| Score | Rating |
-|---|---|
-| 90–100 | 🟢 Excellent |
-| 75–89 | 🟢 Good |
-| 50–74 | 🟡 Needs Attention |
-| 0–49 | 🔴 High Risk |
+This creates **privacy fatigue**.
 
----
+Users know privacy is important, but they do not know:
 
-## 📊 Privacy Score Dashboard
-
-Users receive:
-
-- Overall privacy score
-- Category-wise breakdown
-- Top privacy risks
-- Recommended actions
-- Progress toward improving their privacy
-
-The dashboard turns privacy awareness into measurable progress.
+> **"What should I do next?"**
 
 ---
 
-## 🤖 AI Privacy Assistant
+# 💡 Our Solution
 
-PrivacyGuard AI includes an AI assistant powered by **Groq** using:
+PrivacyGuard AI bridges the gap between:
 
-`openai/gpt-oss-120b`
+> **Knowing privacy matters**
 
-The AI helps users understand privacy concepts and provides practical privacy guidance.
+and
 
-### AI Architecture
+> **Knowing what action to take next.**
+
+The application evaluates a user's privacy habits through a short interactive assessment.
+
+It then:
+
+1. Calculates a privacy score from 0–100
+2. Breaks the score into privacy categories
+3. Identifies the user's highest-risk areas
+4. Prioritizes recommended actions
+5. Connects users to relevant privacy guides
+6. Provides short educational lessons
+7. Tests understanding through quizzes
+8. Provides an AI Privacy Assistant
+9. Tracks completed learning and actions
+10. Allows users to reassess their privacy progress
+
+---
+
+# 👥 Target Users
+
+PrivacyGuard AI is designed for:
+
+- Everyday internet users
+- Non-technical users
+- Students
+- Professionals
+- People who want to improve their digital privacy
+- Users who feel overwhelmed by complicated privacy settings
+
+The platform does not assume that the user has cybersecurity knowledge.
+
+---
+
+# 🌟 What Makes PrivacyGuard AI Different?
+
+## 1. A Calmer Kind of Privacy
+
+PrivacyGuard AI intentionally avoids fear-mongering.
+
+Instead of:
+
+> "You are being hacked!"
+
+the platform focuses on:
+
+> "Here is your risk, here is why it matters, and here is what you can do next."
+
+The goal is to make privacy understandable rather than frightening.
+
+---
+
+## 2. Privacy Is Measurable
+
+Instead of giving users a large list of generic privacy tips, PrivacyGuard AI provides a measurable:
+
+### Privacy Score: 0–100
+
+This gives users an easy way to understand their current privacy posture.
+
+---
+
+## 3. Risk Prioritization
+
+The platform does not simply show dozens of warnings.
+
+It identifies important weaknesses and prioritizes them.
+
+For example:
 
 ```text
-User
-  ↓
-React Frontend
-  ↓
-Supabase Edge Function
-  ↓
-Groq API
-  ↓
-AI Response
-  ↓
-Supabase
-  ↓
-React Frontend
+Privacy Score
+     ↓
+Category Breakdown
+     ↓
+Top Privacy Risks
+     ↓
+Recommended Actions
