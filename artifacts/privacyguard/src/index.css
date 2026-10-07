@@ -200,23 +200,26 @@
   --elevate-1: rgba(255, 255, 255, 0.04);
   --elevate-2: rgba(255, 255, 255, 0.09);
 
-  --background: 164 25% 10%;
-  --foreground: 153 25% 91%;
-  --border: 162 18% 24%;
-  --card: 163 23% 14%;
-  --card-foreground: 153 25% 91%;
-  --card-border: 162 18% 24%;
-  --sidebar: 165 24% 12%;
+  /* Deep green-black background #0b1110 -> hsl(168 32% 5.5%) */
+  --background: 168 32% 5.5%;
+  --foreground: 153 25% 93%;
+  --border: 165 20% 16%;
+  /* Main cards #111a18 -> hsl(167 22% 8.5%) */
+  --card: 167 22% 8.5%;
+  --card-foreground: 153 25% 93%;
+  --card-border: 165 20% 16%;
+  /* Sidebar slightly darker than main cards #0e1514 */
+  --sidebar: 168 25% 7%;
   --sidebar-foreground: 153 25% 91%;
-  --sidebar-border: 162 18% 24%;
+  --sidebar-border: 165 20% 15%;
   --sidebar-primary: 156 43% 62%;
   --sidebar-primary-foreground: 165 30% 12%;
-  --sidebar-accent: 162 21% 20%;
-  --sidebar-accent-foreground: 153 25% 91%;
+  --sidebar-accent: 165 22% 14%;
+  --sidebar-accent-foreground: 153 25% 93%;
   --sidebar-ring: 156 43% 62%;
-  --popover: 163 23% 14%;
-  --popover-foreground: 153 25% 91%;
-  --popover-border: 162 18% 24%;
+  --popover: 167 22% 9%;
+  --popover-foreground: 153 25% 93%;
+  --popover-border: 165 20% 16%;
   --primary: 156 43% 62%;
   --primary-foreground: 165 30% 12%;
   --secondary: 162 21% 20%;
@@ -266,9 +269,256 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
-  body { min-height: 100dvh; background: hsl(var(--background)); }
+  html {
+    scroll-behavior: smooth;
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  body {
+    min-height: 100dvh;
+    background: hsl(var(--background));
+    transition: background-color 200ms ease, color 200ms ease;
+  }
   button, a, input, textarea { -webkit-tap-highlight-color: transparent; }
+}
+
+/* Dark mode semantic surface & text mappings */
+.dark .grain {
+  background-color: #0b1110 !important;
+  color: #e2ede6 !important;
+}
+
+.dark header {
+  background-color: rgba(14, 22, 20, 0.94) !important;
+  border-color: #1a2924 !important;
+}
+
+.dark aside {
+  background-color: #0e1614 !important;
+  border-color: #1a2924 !important;
+}
+
+.dark .bg-\[\#f5f8f4\],
+.dark .bg-\[\#f7faf6\]\/95,
+.dark .bg-\[\#eff5ef\],
+.dark .bg-\[\#f2f7f1\],
+.dark .bg-\[\#f8fbf7\],
+.dark .bg-\[\#edf4ed\],
+.dark .bg-\[\#eaf2e9\],
+.dark .bg-\[\#edf4ee\] {
+  background-color: #111a18 !important;
+}
+
+.dark .bg-white,
+.dark .bg-\[\#fbfdf9\],
+.dark .bg-\[\#fcfdfa\],
+.dark .bg-\[\#fbfdfa\],
+.dark .bg-\[\#f9fcf8\] {
+  background-color: #14201d !important;
+  color: #e2ede6 !important;
+}
+
+.dark .border-\[\#dce8df\],
+.dark .border-\[\#d8e5da\],
+.dark .border-\[\#dbe7dc\],
+.dark .border-\[\#d4e1d6\],
+.dark .border-\[\#cadccf\],
+.dark .border-\[\#d7e3d9\],
+.dark .border-\[\#e2eae3\],
+.dark .border-\[\#e1eae2\],
+.dark .border-\[\#c8dfce\],
+.dark .border-\[\#d2e4d7\],
+.dark .border-\[\#b8cdbd\],
+.dark .border-\[\#e3ede5\],
+.dark .border-\[\#c6d7cc\],
+.dark .border-\[\#dbe8de\],
+.dark .divide-\[\#dce8df\] > * + * {
+  border-color: #1f312b !important;
+}
+
+/* Light background tint cards in dark mode */
+.dark .bg-\[\#deece2\],
+.dark .bg-\[\#e5f0e7\],
+.dark .bg-\[\#e5efe8\],
+.dark .bg-\[\#e2f0e5\],
+.dark .bg-\[\#e6f0e5\],
+.dark .bg-\[\#eaf3ec\],
+.dark .bg-\[\#e2f1e6\],
+.dark .bg-\[\#e8f3e9\],
+.dark .bg-\[\#dceadd\],
+.dark .bg-\[\#ebf5ee\],
+.dark .bg-\[\#e4efe6\],
+.dark .bg-\[\#eef7f1\],
+.dark .bg-\[\#e5eee5\],
+.dark .bg-\[\#edf3ed\],
+.dark .bg-\[\#e1eee4\] {
+  background-color: #192a24 !important;
+}
+
+/* Dark mode text readability */
+.dark .text-\[\#183c35\],
+.dark .text-\[\#193e37\],
+.dark .text-\[\#173e36\],
+.dark .text-\[\#21483c\],
+.dark .text-\[\#1c473c\],
+.dark .text-\[\#194338\],
+.dark .text-\[\#194035\],
+.dark .text-\[\#1b4339\],
+.dark .text-\[\#1b4438\],
+.dark .text-\[\#1e4d3e\],
+.dark .text-\[\#1d473b\],
+.dark .text-\[\#174338\] {
+  color: #f1f7f3 !important;
+}
+
+.dark .text-\[\#315c50\],
+.dark .text-\[\#39685b\],
+.dark .text-\[\#387057\],
+.dark .text-\[\#38704e\],
+.dark .text-\[\#39745d\],
+.dark .text-\[\#396d55\],
+.dark .text-\[\#41705d\],
+.dark .text-\[\#286253\],
+.dark .text-\[\#285d4b\],
+.dark .text-\[\#285741\],
+.dark .text-\[\#3b584c\],
+.dark .text-\[\#345347\],
+.dark .text-\[\#496359\],
+.dark .text-\[\#456056\],
+.dark .text-\[\#49685a\],
+.dark .text-\[\#446b5a\],
+.dark .text-\[\#446759\],
+.dark .text-\[\#2a4e43\],
+.dark .text-\[\#35594b\],
+.dark .text-\[\#355a4b\] {
+  color: #92bfa7 !important;
+}
+
+.dark .text-\[\#62786e\],
+.dark .text-\[\#637b72\],
+.dark .text-\[\#668276\],
+.dark .text-\[\#71867b\],
+.dark .text-\[\#788c82\],
+.dark .text-\[\#788b80\],
+.dark .text-\[\#788d82\],
+.dark .text-\[\#799087\],
+.dark .text-\[\#6d8278\],
+.dark .text-\[\#899a91\],
+.dark .text-\[\#8aa095\],
+.dark .text-\[\#81958a\],
+.dark .text-\[\#84958c\],
+.dark .text-\[\#87988f\],
+.dark .text-\[\#8a9a91\],
+.dark .text-\[\#91a198\],
+.dark .text-\[\#93a198\],
+.dark .text-\[\#95a49b\],
+.dark .text-\[\#9aaba1\],
+.dark .text-\[\#6c8075\],
+.dark .text-\[\#6e8579\],
+.dark .text-\[\#789184\],
+.dark .text-\[\#7e9187\],
+.dark .text-\[\#718a7c\],
+.dark .text-\[\#6b8075\],
+.dark .text-\[\#637d71\],
+.dark .text-\[\#6b897b\] {
+  color: #8da498 !important;
+}
+
+/* Yellow / Warning cards in dark mode */
+.dark .bg-\[\#fff8e9\],
+.dark .bg-\[\#fff7e5\],
+.dark .bg-\[\#f7e9c8\],
+.dark .bg-\[\#f5e8c6\],
+.dark .bg-\[\#fff9ee\],
+.dark .bg-\[\#fff9eb\],
+.dark .bg-\[\#f7efd9\],
+.dark .bg-\[\#fff8e8\],
+.dark .bg-\[\#feecd2\],
+.dark .bg-\[\#fff2db\],
+.dark .bg-\[\#fff7e6\] {
+  background-color: #242013 !important;
+  border-color: #3f361c !important;
+}
+
+.dark .text-\[\#785a21\],
+.dark .text-\[\#6e5b31\],
+.dark .text-\[\#7d602b\],
+.dark .text-\[\#775d2b\],
+.dark .text-\[\#79663c\],
+.dark .text-\[\#7b725d\],
+.dark .text-\[\#7b6947\],
+.dark .text-\[\#75613b\],
+.dark .text-\[\#725d31\],
+.dark .text-\[\#816a34\],
+.dark .text-\[\#655a42\],
+.dark .text-\[\#816329\],
+.dark .text-\[\#917439\],
+.dark .text-\[\#9c6314\],
+.dark .text-\[\#af7624\],
+.dark .text-\[\#bf7e21\] {
+  color: #ebd28c !important;
+}
+
+/* Danger / Risk cards in dark mode */
+.dark .bg-\[\#fff0ed\],
+.dark .bg-\[\#ffeae6\],
+.dark .bg-\[\#fde2dc\],
+.dark .bg-\[\#fdf0ef\],
+.dark .bg-\[\#fffbf9\],
+.dark .bg-\[\#fff1ec\],
+.dark .bg-\[\#fae9df\],
+.dark .bg-\[\#f8eade\] {
+  background-color: #261715 !important;
+  border-color: #44221e !important;
+}
+
+.dark .text-\[\#984e42\],
+.dark .text-\[\#955649\],
+.dark .text-\[\#a35b4d\],
+.dark .text-\[\#be4339\],
+.dark .text-\[\#b8372d\],
+.dark .text-\[\#c73b33\],
+.dark .text-\[\#d6453d\],
+.dark .text-\[\#854e42\],
+.dark .text-\[\#8b5a48\],
+.dark .text-\[\#a46a4a\],
+.dark .text-\[\#9c684b\] {
+  color: #f19389 !important;
+}
+
+/* Blue cards in dark mode */
+.dark .bg-\[\#e5eff2\],
+.dark .bg-\[\#e7eff1\] {
+  background-color: #142226 !important;
+  border-color: #1c353b !important;
+}
+
+.dark .text-\[\#407682\],
+.dark .text-\[\#4b7780\] {
+  color: #7bc1cf !important;
+}
+
+/* Audit hero gradient in dark mode */
+.dark [data-testid="card-audit-score-hero"],
+.dark [data-testid="card-privacy-audit-entry"] {
+  background-image: linear-gradient(to bottom right, #13211d, #111a18, #0d1715) !important;
+  border-color: #1f332c !important;
+}
+
+.dark [data-testid="card-score-progress-improvement"] {
+  background-color: #172821 !important;
+  border-color: #264537 !important;
+}
+
+.dark [data-testid="section-ai-coach-explanation"] {
+  background-color: #121e1a !important;
+  border-color: #1d322a !important;
+}
+
+.dark textarea,
+.dark input {
+  background-color: #13201d !important;
+  color: #f1f7f3 !important;
+  border-color: #1f332c !important;
 }
 
 .font-display { font-family: 'Manrope', sans-serif; }

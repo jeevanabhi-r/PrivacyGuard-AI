@@ -5,15 +5,17 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, Router as WouterRouter, useLocation } from 'wouter';
-import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, CircleHelp, ClipboardCheck, Clock3, Copy, Eye, FileCheck2, GraduationCap, KeyRound, LockKeyhole, LogIn, LogOut, Menu, MessageCircle, Plus, Send, Shield, ShieldCheck, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, CircleHelp, ClipboardCheck, Clock3, Copy, Eye, FileCheck2, GraduationCap, KeyRound, LockKeyhole, LogIn, LogOut, Menu, MessageCircle, Moon, Plus, Send, Shield, ShieldCheck, Sparkles, Sun, Trash2, X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { getGuideFallback, guides, lessons, recommendations, suggestedPrompts, type Guide, type Lesson } from '@/lib/content';
 import { getCurrentUser, getAuthRedirectUrl, PrivacyUser, supabase, supabaseConfigured } from '@/lib/supabase';
 import { PrivacyAuditPage } from '@/pages/PrivacyAuditPage';
+import { ThemeProvider, useTheme } from '@/hooks/use-theme';
 import type { FormEvent } from 'react';
 
 const queryClient = new QueryClient();
@@ -60,6 +62,29 @@ const nav = [
   { href: '/recommendations', label: 'Your next steps', icon: Sparkles },
 ];
 
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === 'dark';
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          onClick={toggleTheme}
+          type="button"
+          className="grid size-9 place-items-center rounded-full border border-[#dce8df] bg-white text-[#2b5749] shadow-sm transition-colors hover:bg-[#edf4ee] focus:outline-none focus:ring-2 focus:ring-[#286253]/20 dark:border-[#1f312b] dark:bg-[#14201d] dark:text-[#a0cbb5] dark:hover:bg-[#1b2b25]"
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          data-testid="button-theme-toggle"
+        >
+          {isDark ? <Sun size={17} className="text-[#f5d985]" /> : <Moon size={17} className="text-[#315c50]" />}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="bottom">
+        <p>{isDark ? "Light mode" : "Dark mode"}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function AppShell({ children, user, openAuth, signOut }: { children: ReactNode; user: PrivacyUser | null; openAuth: () => void; signOut: () => void }) {
   const [loc] = useLocation();
   const [mobileNav, setMobileNav] = useState(false);
@@ -73,6 +98,7 @@ function AppShell({ children, user, openAuth, signOut }: { children: ReactNode; 
         </div>
         <div className="flex items-center gap-2">
           <span className="hidden items-center gap-2 rounded-full bg-[#eaf3ec] px-3 py-1.5 text-[11px] font-semibold text-[#39685b] sm:flex"><span className="size-1.5 rounded-full bg-[#70a889]"/>A calmer kind of privacy</span>
+          <ThemeToggle />
           {user ? <div className="group relative">
             <button className="flex items-center gap-2 rounded-full border border-[#dce8df] bg-white px-2.5 py-1.5 text-sm font-semibold hover:border-[#9bb9a7]" data-testid="button-account-menu">
               <span className="grid size-7 place-items-center rounded-full bg-[#e5efe8] text-[11px] font-bold text-[#245649]">{(user.email || 'Y').slice(0, 1).toUpperCase()}</span><span className="hidden max-w-[140px] truncate sm:block">{user.email}</span><ChevronDown size={14}/>
@@ -602,7 +628,18 @@ function LessonRoute({ id, user, done, toggle }: { id: string; user: PrivacyUser
 }
 
 function App() {
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><PrivacyApp/></WouterRouter><Toaster/></TooltipProvider></QueryClientProvider>;
+  return (
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+            <PrivacyApp/>
+          </WouterRouter>
+          <Toaster/>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;
