@@ -13,3 +13,10 @@ export async function getCurrentUser(): Promise<PrivacyUser | null> {
   const { data } = await supabase.auth.getUser();
   return data.user;
 }
+
+export function getAuthRedirectUrl(): string {
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin;
+  }
+  return 'https://privacy-guard-ai-roan.vercel.app';
+}

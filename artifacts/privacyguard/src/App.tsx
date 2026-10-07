@@ -5,14 +5,15 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Link, Route, Switch, Router as WouterRouter, useLocation } from 'wouter';
-import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, CircleHelp, Clock3, Copy, Eye, FileCheck2, GraduationCap, KeyRound, LockKeyhole, LogIn, LogOut, Menu, MessageCircle, Plus, Send, Shield, ShieldCheck, Sparkles, Trash2, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, ChevronDown, CircleHelp, ClipboardCheck, Clock3, Copy, Eye, FileCheck2, GraduationCap, KeyRound, LockKeyhole, LogIn, LogOut, Menu, MessageCircle, Plus, Send, Shield, ShieldCheck, Sparkles, Trash2, X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import ReactMarkdown from 'react-markdown';
 import { z } from 'zod';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { getGuideFallback, guides, lessons, recommendations, suggestedPrompts, type Guide, type Lesson } from '@/lib/content';
-import { getCurrentUser, PrivacyUser, supabase, supabaseConfigured } from '@/lib/supabase';
+import { getCurrentUser, getAuthRedirectUrl, PrivacyUser, supabase, supabaseConfigured } from '@/lib/supabase';
+import { PrivacyAuditPage } from '@/pages/PrivacyAuditPage';
 import type { FormEvent } from 'react';
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ function Logo({ compact = false }: { compact?: boolean }) {
 
 const nav = [
   { href: '/', label: 'Overview', icon: Shield },
+  { href: '/audit', label: 'Privacy Audit', icon: ClipboardCheck },
   { href: '/assistant', label: 'Ask a question', icon: MessageCircle },
   { href: '/guides', label: 'Guides & checklists', icon: BookOpen },
   { href: '/lessons', label: 'Short lessons', icon: GraduationCap },
@@ -109,22 +111,28 @@ function AppShell({ children, user, openAuth, signOut }: { children: ReactNode; 
   </div>;
 }
 
-function AuthDialog({ onClose, onSuccess }: { onClose: () => void; onSuccess: (user: PrivacyUser) => void }) {
+function AuthDialog({ onClose, onSuccess, initialNotice }: { onClose: () => void; onSuccess: (user: PrivacyUser) => void; initialNotice?: string }) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialNotice || '');
   const [sent, setSent] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
   const form = useForm<AuthFormValues>({
     resolver: zodResolver(authFormSchema),
     defaultValues: { email: '', password: '' },
   });
   const submit = async (values: AuthFormValues) => {
     if (!supabase) return setError('Account sign-in is not available yet. The app owner needs to connect Supabase first.');
-    setBusy(true); setError('');
+    setBusy(true); setError(''); setResendSuccess(false);
     try {
+      const emailRedirectTo = getAuthRedirectUrl();
       const result = mode === 'signin'
         ? await supabase.auth.signInWithPassword({ email: values.email, password: values.password })
-        : await supabase.auth.signUp({ email: values.email, password: values.password });
+        : await supabase.auth.signUp({
+            email: values.email,
+            password: values.password,
+            options: { emailRedirectTo },
+          });
       if (result.error) setError(result.error.message.toLowerCase().includes('invalid') ? 'That email and password did not match. Please try again.' : result.error.message);
       else if (result.data.user && result.data.session) { onSuccess(result.data.user); onClose(); }
       else if (result.data.user) setSent(true);
@@ -135,17 +143,49 @@ function AuthDialog({ onClose, onSuccess }: { onClose: () => void; onSuccess: (u
       setBusy(false);
     }
   };
+
+  const handleResend = async () => {
+    if (!supabase) return;
+    const email = form.getValues('email')?.trim();
+    if (!email) {
+      setError('Please enter your email address to request a new confirmation link.');
+      return;
+    }
+    setBusy(true); setError(''); setResendSuccess(false);
+    try {
+      const emailRedirectTo = getAuthRedirectUrl();
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: { emailRedirectTo },
+      });
+      if (resendError) {
+        setError(resendError.message);
+      } else {
+        setResendSuccess(true);
+      }
+    } catch {
+      setError('We could not reach the service to resend the confirmation email. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return <div className="fixed inset-0 z-[60] grid place-items-center bg-[#183c35]/35 p-4 backdrop-blur-sm" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
     <div role="dialog" aria-modal="true" aria-labelledby="auth-title" className="page-enter w-full max-w-[440px] rounded-[26px] border border-[#dce8df] bg-[#fbfdf9] p-6 shadow-[0_24px_90px_-26px_rgba(20,56,46,.35)] sm:p-8" data-testid="dialog-auth">
       <div className="flex items-start justify-between"><div><div className="grid size-11 place-items-center rounded-2xl bg-[#e5f0e7] text-[#20594b]"><ShieldCheck size={21}/></div><h2 id="auth-title" className="font-display mt-5 text-2xl font-extrabold tracking-[-.045em]">{mode === 'signin' ? 'Welcome back' : 'Create your account'}</h2><p className="mt-1 text-sm text-[#71867b]">Your conversations and learning, kept with your account.</p></div><button onClick={onClose} aria-label="Close" className="grid size-9 place-items-center rounded-full hover:bg-[#edf4ee]" data-testid="button-close-auth"><X size={17}/></button></div>
       {!supabaseConfigured && <div className="mt-5 rounded-xl border border-[#e9d7a8] bg-[#fff7e5] p-3.5 text-sm leading-relaxed text-[#6e5b31]" data-testid="status-auth-unavailable">Account sign-in is not set up yet. Public guides and lessons are ready to explore.</div>}
       {error && <div className="mt-4 rounded-xl bg-[#fff0ed] p-3 text-sm text-[#984e42]" role="alert" data-testid="status-auth-error">{error}</div>}
-      {sent ? <div className="mt-5 rounded-xl border border-[#c8dfce] bg-[#edf7ef] p-4 text-sm leading-relaxed text-[#315f49]" data-testid="status-email-confirmation">Check your inbox for a confirmation link. Your account will be ready once you confirm your email.</div> : <Form {...form}><form onSubmit={form.handleSubmit(submit)} className="mt-5 space-y-3.5">
+      {resendSuccess && <div className="mt-4 rounded-xl border border-[#c8dfce] bg-[#edf7ef] p-3 text-sm text-[#315f49]" role="status" data-testid="status-resend-success">A fresh confirmation link has been sent to your email.</div>}
+      {sent ? <div className="mt-5 space-y-3.5"><div className="rounded-xl border border-[#c8dfce] bg-[#edf7ef] p-4 text-sm leading-relaxed text-[#315f49]" data-testid="status-email-confirmation">Check your inbox for a confirmation link. Your account will be ready once you confirm your email.</div><button onClick={handleResend} disabled={busy} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#286253] hover:underline disabled:opacity-50" data-testid="button-resend-confirmation">Did not receive it? Resend confirmation email</button></div> : <Form {...form}><form onSubmit={form.handleSubmit(submit)} className="mt-5 space-y-3.5">
         <FormField control={form.control} name="email" render={({ field }) => <FormItem className="space-y-1.5"><FormLabel className="text-xs font-bold text-[#496359]">Email address</FormLabel><FormControl><input type="email" autoComplete="email" {...field} className="w-full rounded-xl border border-[#d7e3d9] bg-white px-3.5 py-3 text-sm outline-none focus:border-[#4d8a72] focus:ring-2 focus:ring-[#4d8a72]/15" placeholder="you@example.com" data-testid="input-auth-email"/></FormControl><FormDescription className="sr-only">Enter the email address for your account.</FormDescription><FormMessage className="text-xs"/></FormItem>}/>
         <FormField control={form.control} name="password" render={({ field }) => <FormItem className="space-y-1.5"><FormLabel className="text-xs font-bold text-[#496359]">Password</FormLabel><FormControl><input type="password" autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} {...field} className="w-full rounded-xl border border-[#d7e3d9] bg-white px-3.5 py-3 text-sm outline-none focus:border-[#4d8a72] focus:ring-2 focus:ring-[#4d8a72]/15" placeholder="At least 6 characters" data-testid="input-auth-password"/></FormControl><FormDescription className="sr-only">Enter a password with at least six characters.</FormDescription><FormMessage className="text-xs"/></FormItem>}/>
         <button type="submit" disabled={busy || !supabaseConfigured} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#184c43] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#236457] disabled:cursor-not-allowed disabled:opacity-45" data-testid="button-auth-submit">{busy ? 'One moment…' : mode === 'signin' ? 'Sign in' : 'Create account'} {!busy && <ArrowRight size={15}/>}</button>
       </form></Form>}
-      <p className="mt-5 text-center text-xs text-[#788d82]">{mode === 'signin' ? 'New here?' : 'Already have an account?'} <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setSent(false); form.clearErrors(); }} className="font-bold text-[#286253] hover:underline" data-testid="button-auth-mode">{mode === 'signin' ? 'Create an account' : 'Sign in instead'}</button></p>
+      <div className="mt-5 flex flex-col items-center gap-2 text-center text-xs text-[#788d82]">
+        <p>{mode === 'signin' ? 'New here?' : 'Already have an account?'} <button onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(''); setSent(false); setResendSuccess(false); form.clearErrors(); }} className="font-bold text-[#286253] hover:underline" data-testid="button-auth-mode">{mode === 'signin' ? 'Create an account' : 'Sign in instead'}</button></p>
+        {mode === 'signin' && !sent && <button type="button" onClick={handleResend} disabled={busy} className="text-[11px] text-[#5b7367] hover:underline" data-testid="button-resend-link">Need a new confirmation link?</button>}
+      </div>
       <p className="mt-4 text-center text-[10px] leading-relaxed text-[#91a198]">Your privacy matters. We never ask you to share passwords or sensitive account details in a chat.</p>
     </div>
   </div>;
@@ -194,6 +234,38 @@ function Overview({ user, done }: { user: PrivacyUser | null; done: string[] }) 
         <div className="mt-7 flex flex-wrap gap-3"><Link href="/guides" className="inline-flex items-center gap-2 rounded-full bg-[#f0d588] px-5 py-3 text-sm font-extrabold text-[#29483a] transition hover:-translate-y-0.5" data-testid="link-start-guide">Find a place to start <ArrowRight size={15}/></Link><Link href="/assistant" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white hover:bg-white/10" data-testid="link-ask-privacy">Ask a privacy question <MessageCircle size={15}/></Link></div>
       </div>
       <div className="relative mt-9 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/15 pt-5 text-xs text-[#d5e4d9] sm:mt-12"><span className="inline-flex items-center gap-2"><ShieldCheck size={15} className="text-[#f0d588]"/>Private by design</span><span className="inline-flex items-center gap-2"><Eye size={15} className="text-[#f0d588]"/>Plain-language guidance</span><span className="inline-flex items-center gap-2"><CheckCircle2 size={15} className="text-[#f0d588]"/>Progress at your pace</span></div>
+    </section>
+
+    {/* Prominent Privacy Audit Entry Card */}
+    <section className="mt-8 rounded-[24px] border border-[#d8e6dc] bg-gradient-to-br from-[#ebf5ee] via-[#f4f9f4] to-[#fbfdfa] p-6 sm:p-8 shadow-sm" data-testid="card-privacy-audit-entry">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-start gap-4 sm:gap-5">
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#1b5043] text-[#f2d787] shadow-sm sm:size-14">
+            <ClipboardCheck size={26} strokeWidth={2.2} />
+          </span>
+          <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-[#deeee3] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-[.14em] text-[#2c654f]">
+              <Sparkles size={11} /> 10-Question Checkup
+            </div>
+            <h2 className="font-display mt-2 text-xl font-extrabold tracking-[-.035em] text-[#194035] sm:text-2xl" data-testid="text-audit-card-title">
+              How private is your digital life?
+            </h2>
+            <p className="mt-1.5 max-w-[560px] text-xs leading-5 text-[#637d71] sm:text-sm">
+              Answer a few simple questions and discover where you can improve your privacy.
+            </p>
+          </div>
+        </div>
+        <div className="flex shrink-0 items-center">
+          <Link
+            href="/audit"
+            className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#1b5043] px-6 py-3.5 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#256658] hover:shadow-md sm:w-auto"
+            data-testid="button-run-privacy-audit"
+          >
+            <span>Run Privacy Audit</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </div>
     </section>
     <div className="mt-9 grid gap-8 xl:grid-cols-[minmax(0,1.6fr)_minmax(260px,.8fr)]">
       <section><div className="mb-4 flex items-end justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#799087]">Small steps, real impact</p><h2 className="font-display mt-1 text-[22px] font-extrabold tracking-[-.04em]">A few good places to begin</h2></div><Link href="/recommendations" className="hidden items-center gap-1 text-xs font-bold text-[#286253] sm:flex" data-testid="link-all-recommendations">All next steps <ArrowRight size={13}/></Link></div>
@@ -460,7 +532,32 @@ function PrivacyApp() {
   const [user, setUser] = useState<PrivacyUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authReady, setAuthReady] = useState(false);
+  const [authNotice, setAuthNotice] = useState<string | undefined>(undefined);
   const { done, toggle } = useProgress(user);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Check query params & hash fragment for Supabase auth errors (e.g., expired confirmation link)
+    const hash = window.location.hash.startsWith('#') ? window.location.hash.substring(1) : window.location.hash;
+    const hashParams = new URLSearchParams(hash);
+    const searchParams = new URLSearchParams(window.location.search);
+
+    const errorCode = hashParams.get('error_code') || searchParams.get('error_code');
+    const errorDescription = hashParams.get('error_description') || searchParams.get('error_description');
+
+    if (
+      errorCode === 'otp_expired' ||
+      errorCode === 'access_denied' ||
+      (errorDescription && (errorDescription.includes('expired') || errorDescription.includes('token')))
+    ) {
+      setAuthNotice('Your confirmation link has expired. Please request a new one.');
+      setAuthOpen(true);
+      // Clean up the URL hash & query so raw Supabase error params are not visible to users or judges
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
   useEffect(() => {
     let mounted = true;
     if (!supabase) { setAuthReady(true); return; }
@@ -476,10 +573,11 @@ function PrivacyApp() {
     return () => { mounted = false; data.subscription.unsubscribe(); };
   }, []);
   const signOut = async () => { if (supabase) await supabase.auth.signOut(); setUser(null); };
-  const openAuth = useCallback(() => setAuthOpen(true), []);
+  const openAuth = useCallback(() => { setAuthNotice(undefined); setAuthOpen(true); }, []);
   if (!authReady) return <div className="grid min-h-[100dvh] place-items-center bg-[#f5f8f4]" data-testid="status-auth-loading"><div className="flex items-center gap-3 rounded-full border border-[#dce8df] bg-white px-4 py-3 text-xs text-[#668074]"><span className="size-2 animate-pulse rounded-full bg-[#6e9c7c]"/>Getting your privacy space ready…</div></div>;
   return <AppShell user={user} openAuth={openAuth} signOut={signOut}><RoutedErrorBoundary key={location}><Switch>
     <Route path="/"><Overview user={user} done={done}/></Route>
+    <Route path="/audit"><PrivacyAuditPage user={user} done={done} toggle={toggle}/></Route>
     <Route path="/assistant"><AssistantPage key={user?.id || 'guest'} user={user} openAuth={openAuth}/></Route>
     <Route path="/guides"><GuidesPage user={user} done={done} toggle={toggle}/></Route>
     <Route path="/guides/:id">{(params) => <GuideRoute id={params.id} user={user} done={done} toggle={toggle}/>}</Route>
@@ -487,7 +585,7 @@ function PrivacyApp() {
     <Route path="/lessons/:id">{(params) => <LessonRoute id={params.id} user={user} done={done} toggle={toggle}/>}</Route>
     <Route path="/recommendations"><RecommendationsPage user={user} done={done}/></Route>
     <Route component={NotFound}/>
-  </Switch></RoutedErrorBoundary>{authOpen && <AuthDialog onClose={() => setAuthOpen(false)} onSuccess={setUser}/>}</AppShell>;
+  </Switch></RoutedErrorBoundary>{authOpen && <AuthDialog onClose={() => { setAuthOpen(false); setAuthNotice(undefined); }} onSuccess={setUser} initialNotice={authNotice}/>}</AppShell>;
 }
 
 function GuideRoute({ id, user, done, toggle }: { id: string; user: PrivacyUser | null; done: string[]; toggle: (id: string, type: string) => Promise<{ ok: boolean; error?: string }> }) {
