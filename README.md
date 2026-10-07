@@ -121,11 +121,25 @@ It identifies important weaknesses and prioritizes them.
 
 For example:
 
-```text
-Privacy Score
-     ↓
-Category Breakdown
-     ↓
-Top Privacy Risks
-     ↓
-Recommended Actions
+                     PRIVACYGUARD AI
+                            │
+                            ▼
+                    React + TypeScript
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+       Privacy Audit      Guides        Lessons
+             │              │              │
+             └──────────────┼──────────────┘
+                            │
+                            ▼
+                    Supabase Platform
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+          ▼                 ▼                 ▼
+       Auth             PostgreSQL       Edge Function
+                                              │
+                                              ▼
+                                           Groq AI
