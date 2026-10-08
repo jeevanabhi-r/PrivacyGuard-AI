@@ -25,6 +25,7 @@ import {
   type PrivacyScoreResult,
 } from '@/lib/audit';
 import { PrivacyUser, supabase, supabaseConfigured } from '@/lib/supabase';
+import { PrivacyActionPlan } from '@/components/privacy-actions/PrivacyActionPlan';
 import ReactMarkdown from 'react-markdown';
 
 const AUDIT_STORAGE_KEY = 'privacyguard_audit_answers';
@@ -51,10 +52,12 @@ export function PrivacyAuditPage({
   user,
   done,
   toggle,
+  openAuth,
 }: {
   user: PrivacyUser | null;
   done: string[];
   toggle: (id: string, type: string) => Promise<{ ok: boolean; error?: string }>;
+  openAuth?: () => void;
 }) {
   const [answers, setAnswers] = useState<Record<string, AuditOption>>(() => {
     try {
@@ -417,87 +420,15 @@ export function PrivacyAuditPage({
           </div>
         )}
 
-        {/* Action Plan */}
-        <div className="mt-10" data-testid="section-action-plan">
-          <div className="mb-4 flex flex-col justify-between gap-1 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#789184]">
-                Targeted Roadmap
-              </p>
-              <h2 className="font-display mt-1 text-xl font-extrabold tracking-[-.03em] text-[#1b4339]">
-                🎯 Your Privacy Action Plan
-              </h2>
-            </div>
-            <p className="text-xs text-[#71867b]">Mark steps as completed to watch your score improve</p>
-          </div>
-
-          <div className="space-y-3">
-            {result.actionPlan.map((action) => {
-              const isDone = completedActions.includes(action.id);
-              const ActionIcon = getCategoryIcon(action.icon);
-
-              return (
-                <div
-                  key={action.id}
-                  className={`flex flex-col gap-4 rounded-2xl border p-4.5 transition sm:flex-row sm:items-center sm:p-5 ${
-                    isDone
-                      ? 'border-[#c5e2ce] bg-[#f0f8f2]'
-                      : 'border-[#dce8df] bg-[#fbfdfa] hover:border-[#adc9b2]'
-                  }`}
-                  data-testid={`card-action-plan-${action.id}`}
-                >
-                  <button
-                    onClick={() => toggleAction(action.id, action.guideId)}
-                    className={`grid size-7 shrink-0 place-items-center rounded-lg border transition ${
-                      isDone
-                        ? 'border-[#3f7c5e] bg-[#3f7c5e] text-white'
-                        : 'border-[#c3d6c7] bg-white text-transparent hover:border-[#3f7c5e]'
-                    }`}
-                    aria-label={`Mark ${action.title} as completed`}
-                    data-testid={`checkbox-action-${action.id}`}
-                  >
-                    <Check size={14} strokeWidth={3} />
-                  </button>
-
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#e5efe8] text-[#2c5f4c]">
-                    <ActionIcon size={18} />
-                  </span>
-
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-[#dfede2] px-2 py-0.5 text-[9px] font-extrabold text-[#2d624a]">
-                        {action.timeframe}
-                      </span>
-                      {isDone && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#357250]">
-                          <CheckCircle2 size={12} /> Completed (+{action.weight} pts)
-                        </span>
-                      )}
-                    </div>
-                    <h3
-                      className={`font-display mt-1 text-sm font-extrabold ${
-                        isDone ? 'text-[#386b51] line-through' : 'text-[#1d473b]'
-                      }`}
-                    >
-                      {action.title}
-                    </h3>
-                    <p className="mt-1 text-xs leading-5 text-[#6b8075]">{action.description}</p>
-                  </div>
-
-                  <div className="flex shrink-0 items-center gap-2">
-                    <Link
-                      href={`/guides/${action.guideId}`}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#cbdacf] bg-white px-3.5 py-2 text-xs font-bold text-[#235848] hover:bg-[#edf5ee]"
-                      data-testid={`link-view-guide-${action.id}`}
-                    >
-                      View Guide <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {/* Your Privacy Action Plan */}
+        <PrivacyActionPlan
+          user={user}
+          openAuth={openAuth}
+          recommendedActions={result.actionPlan}
+          completedRecommendedActions={completedActions}
+          onToggleRecommendedAction={(actId, guideId) => toggleAction(actId, guideId)}
+          initialTab={typeof window !== 'undefined' && window.location.search.includes('tab=my-actions') ? 'my-actions' : 'recommended'}
+        />
 
         {/* AI Privacy Coach Explanation Card */}
         <div

@@ -239,6 +239,31 @@ function useProgress(user: PrivacyUser | null) {
   return { done, toggle };
 }
 
+function usePrivacyActionsSummary(user: PrivacyUser | null) {
+  const [counts, setCounts] = useState<{ open: number; completed: number }>({ open: 0, completed: 0 });
+  useEffect(() => {
+    let alive = true;
+    if (!user || !supabase) {
+      setCounts({ open: 0, completed: 0 });
+      return;
+    }
+    supabase
+      .from('privacy_actions')
+      .select('completed')
+      .eq('user_id', user.id)
+      .then(({ data }) => {
+        if (!alive || !data) return;
+        const completed = data.filter((d: { completed: boolean }) => d.completed).length;
+        const open = data.length - completed;
+        setCounts({ open, completed });
+      });
+    return () => {
+      alive = false;
+    };
+  }, [user?.id]);
+  return counts;
+}
+
 function PageHead({ eyebrow, title, description, extra }: { eyebrow: string; title: string; description: string; extra?: ReactNode }) {
   return <div className="mb-8 flex flex-col justify-between gap-4 sm:mb-10 sm:flex-row sm:items-end">
     <div><div className="mb-3 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[.18em] text-[#668276]"><span className="size-1.5 rounded-full bg-[#d9a942]"/>{eyebrow}</div><h1 className="font-display text-[clamp(2rem,4vw,3.15rem)] font-extrabold leading-[1.06] tracking-[-.055em] text-[#173e36]" data-testid="text-page-title">{title}</h1><p className="mt-3 max-w-[600px] text-sm leading-6 text-[#71867b] sm:text-[15px]">{description}</p></div>{extra}
@@ -251,6 +276,7 @@ function FooterNote() {
 
 function Overview({ user, done }: { user: PrivacyUser | null; done: string[] }) {
   const completed = done.length;
+  const actionsSummary = usePrivacyActionsSummary(user);
   return <div className="page-enter px-4 py-7 sm:px-8 sm:py-10 lg:px-12">
     <section className="relative overflow-hidden rounded-[28px] bg-[#194c42] px-6 py-8 text-[#f4f6e9] sm:px-10 sm:py-11 lg:px-12 lg:py-14" data-testid="section-welcome">
       <div className="absolute -right-10 -top-12 size-72 rounded-full border border-[#8eb49a]/20 sm:right-20 sm:size-[410px]"/><div className="absolute -right-3 top-[-5px] size-56 rounded-full border border-[#8eb49a]/15 sm:right-28 sm:size-[330px]"/><div className="absolute bottom-[-140px] right-[16%] size-72 rounded-full bg-[#2d6c58]/35 blur-3xl"/>
@@ -299,13 +325,46 @@ function Overview({ user, done }: { user: PrivacyUser | null; done: string[] }) 
           {recommendations.map((r, i) => <div key={r.id} className="flex items-center gap-4 py-4" data-testid={`item-home-recommendation-${r.id}`}><span className={`grid size-10 shrink-0 place-items-center rounded-[14px] ${i === 0 ? 'bg-[#e2f0e5] text-[#39745d]' : i === 1 ? 'bg-[#e5eff2] text-[#407682]' : 'bg-[#fae9df] text-[#a46a4a]'}`}>{i === 0 ? <KeyRound size={18}/> : i === 1 ? <Eye size={18}/> : <MessageCircle size={18}/>}</span><div className="min-w-0 flex-1"><h3 className="text-sm font-bold">{r.title}</h3><p className="mt-1 text-xs text-[#788c82]">{r.time} · {r.label}</p></div><Link href={r.lesson ? `/lessons/${r.lesson}` : `/guides/${r.guide}`} className="grid size-9 shrink-0 place-items-center rounded-full border border-[#dce8df] text-[#416f5e] hover:bg-[#eff6f0]" aria-label={`Open ${r.title}`} data-testid={`link-home-recommendation-${r.id}`}><ArrowRight size={15}/></Link></div>)}
         </div><Link href="/recommendations" className="mt-4 flex items-center justify-center gap-1 text-xs font-bold text-[#286253] sm:hidden" data-testid="link-all-recommendations-mobile">See all next steps <ArrowRight size={13}/></Link>
       </section>
-      <section className="rounded-2xl border border-[#dce8df] bg-[#edf4ed] p-5 sm:p-6" data-testid="card-progress"><div className="flex items-start justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#799087]">Your learning</p><h2 className="font-display mt-1 text-xl font-extrabold tracking-[-.04em]">One step at a time.</h2></div><span className="grid size-10 place-items-center rounded-[14px] bg-[#dceadd] text-[#396d55]"><GraduationCap size={19}/></span></div>
-        <p className="mt-2 text-xs leading-5 text-[#71867b]">{user ? 'Your completed guides and lessons are saved to your account.' : 'Sign in to save progress across the guides and lessons you complete.'}</p>
-        <div className="mt-5 flex items-baseline gap-2"><span className="font-display text-4xl font-extrabold tracking-[-.06em]" data-testid="text-progress-count">{user ? completed : '—'}</span><span className="text-xs text-[#788c82]">{user ? 'things learned' : 'saved yet'}</span></div>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#d7e5d8]"><div className="h-full rounded-full bg-[#4f8a68] transition-all" style={{ width: user ? `${Math.min(completed / 7 * 100, 100)}%` : '0%' }}/></div>
-        {!user && <Link href="/guides" className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#286253]" data-testid="link-explore-as-guest">Explore without an account <ArrowRight size={13}/></Link>}
-        {user && <Link href="/lessons" className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#286253]" data-testid="link-continue-learning">Continue learning <ArrowRight size={13}/></Link>}
-      </section>
+      <div className="space-y-6">
+        <section className="rounded-2xl border border-[#dce8df] bg-[#edf4ed] p-5 sm:p-6" data-testid="card-progress"><div className="flex items-start justify-between"><div><p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#799087]">Your learning</p><h2 className="font-display mt-1 text-xl font-extrabold tracking-[-.04em]">One step at a time.</h2></div><span className="grid size-10 place-items-center rounded-[14px] bg-[#dceadd] text-[#396d55]"><GraduationCap size={19}/></span></div>
+          <p className="mt-2 text-xs leading-5 text-[#71867b]">{user ? 'Your completed guides and lessons are saved to your account.' : 'Sign in to save progress across the guides and lessons you complete.'}</p>
+          <div className="mt-5 flex items-baseline gap-2"><span className="font-display text-4xl font-extrabold tracking-[-.06em]" data-testid="text-progress-count">{user ? completed : '—'}</span><span className="text-xs text-[#788c82]">{user ? 'things learned' : 'saved yet'}</span></div>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[#d7e5d8]"><div className="h-full rounded-full bg-[#4f8a68] transition-all" style={{ width: user ? `${Math.min(completed / 7 * 100, 100)}%` : '0%' }}/></div>
+          {!user && <Link href="/guides" className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#286253]" data-testid="link-explore-as-guest">Explore without an account <ArrowRight size={13}/></Link>}
+          {user && <Link href="/lessons" className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#286253]" data-testid="link-continue-learning">Continue learning <ArrowRight size={13}/></Link>}
+        </section>
+
+        <section className="rounded-2xl border border-[#dce8df] bg-[#fbfdf9] p-5 sm:p-6" data-testid="card-privacy-actions-summary">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[.16em] text-[#799087]">Your Action Plan</p>
+              <h2 className="font-display mt-1 text-xl font-extrabold tracking-[-.04em]">Privacy Actions</h2>
+            </div>
+            <span className="grid size-10 place-items-center rounded-[14px] bg-[#e5efe8] text-[#245649]"><CheckCircle2 size={19}/></span>
+          </div>
+          <p className="mt-2 text-xs leading-5 text-[#71867b]">
+            {user
+              ? `${actionsSummary.open} open action${actionsSummary.open === 1 ? '' : 's'} · ${actionsSummary.completed} completed`
+              : 'Sign in to save and track your custom privacy actions across devices.'}
+          </p>
+          <div className="mt-4 flex items-baseline gap-2">
+            <span className="font-display text-3xl font-extrabold tracking-[-.06em]" data-testid="text-open-actions-count">{user ? actionsSummary.open : '—'}</span>
+            <span className="text-xs text-[#788c82]">open action{actionsSummary.open === 1 ? '' : 's'}</span>
+            {user && actionsSummary.completed > 0 && (
+              <span className="ml-1 text-xs font-semibold text-[#387057]">({actionsSummary.completed} completed)</span>
+            )}
+          </div>
+          <div className="mt-4">
+            <Link
+              href="/audit?tab=my-actions"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#286253] hover:underline"
+              data-testid="link-view-actions"
+            >
+              View Actions <ArrowRight size={13}/>
+            </Link>
+          </div>
+        </section>
+      </div>
     </div>
     <section className="mt-10 rounded-[22px] border border-[#e8dfc7] bg-[#fff8e9] p-5 sm:flex sm:items-center sm:justify-between sm:p-6"><div className="flex items-start gap-3"><span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#f5e8c6] text-[#7d602b]"><CircleHelp size={17}/></span><div><h2 className="text-sm font-bold">Not sure what to ask?</h2><p className="mt-1 max-w-[520px] text-xs leading-5 text-[#7b725d]">Try asking about a specific moment: a new app, an unexpected message, or a setting you have never checked.</p></div></div><Link href="/assistant" className="ml-12 mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#775d2b] sm:ml-5 sm:mt-0" data-testid="link-ask-for-help">See example questions <ArrowRight size={13}/></Link></section>
     <FooterNote/>
@@ -603,7 +662,7 @@ function PrivacyApp() {
   if (!authReady) return <div className="grid min-h-[100dvh] place-items-center bg-[#f5f8f4]" data-testid="status-auth-loading"><div className="flex items-center gap-3 rounded-full border border-[#dce8df] bg-white px-4 py-3 text-xs text-[#668074]"><span className="size-2 animate-pulse rounded-full bg-[#6e9c7c]"/>Getting your privacy space ready…</div></div>;
   return <AppShell user={user} openAuth={openAuth} signOut={signOut}><RoutedErrorBoundary key={location}><Switch>
     <Route path="/"><Overview user={user} done={done}/></Route>
-    <Route path="/audit"><PrivacyAuditPage user={user} done={done} toggle={toggle}/></Route>
+    <Route path="/audit"><PrivacyAuditPage user={user} done={done} toggle={toggle} openAuth={openAuth}/></Route>
     <Route path="/assistant"><AssistantPage key={user?.id || 'guest'} user={user} openAuth={openAuth}/></Route>
     <Route path="/guides"><GuidesPage user={user} done={done} toggle={toggle}/></Route>
     <Route path="/guides/:id">{(params) => <GuideRoute id={params.id} user={user} done={done} toggle={toggle}/>}</Route>
