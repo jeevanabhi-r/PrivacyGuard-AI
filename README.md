@@ -1,145 +1,489 @@
+<div align="center">
+
 # 🛡️ PrivacyGuard AI
 
-## A Calm, Actionable Digital Privacy Assistant
+### A calmer, smarter way to protect your digital privacy.
 
-PrivacyGuard AI is an AI-powered digital privacy education and decision-support platform designed to help everyday internet users understand, assess, and improve their digital privacy.
+<p>
+  <a href="https://privacy-guard-ai-roan.vercel.app">
+    <img src="https://img.shields.io/badge/🚀%20LIVE%20DEMO-PrivacyGuard%20AI-10B981?style=for-the-badge" />
+  </a>
+  <a href="https://github.com/jeevanabhi-r/PrivacyGuard-AI">
+    <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" />
+  </a>
+</p>
 
-Instead of overwhelming users with long privacy policies, complicated settings, or fear-based cybersecurity warnings, PrivacyGuard AI provides a simple and actionable journey:
+<p>
+  <img src="https://img.shields.io/badge/React-TypeScript-61DAFB?style=flat-square&logo=react" />
+  <img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase" />
+  <img src="https://img.shields.io/badge/Groq-AI-F55036?style=flat-square" />
+  <img src="https://img.shields.io/badge/Vercel-Deployed-000000?style=flat-square&logo=vercel" />
+</p>
 
-> **Assess → Score → Identify Risks → Explain → Act → Learn → Measure**
+> **Understand your privacy. Take action. Build better digital habits.**
 
-The platform combines a **10-question Privacy Audit**, a **0–100 Privacy Score**, personalized risk identification, step-by-step privacy guides, interactive learning, quizzes, and an AI Privacy Assistant.
-
-Most importantly, PrivacyGuard AI follows a **zero-credential architecture**: users are guided to make privacy changes themselves rather than giving PrivacyGuard access to their passwords, OTPs, external account tokens, or private credentials.
+</div>
 
 ---
 
-# 🎯 Problem Statement
+## 🌐 See PrivacyGuard AI in Action
 
-## CS5 – Digital Privacy Assistant
+<div align="center">
 
-Digital privacy has become difficult for ordinary users.
+### 🚀 [Open Live Demo](https://privacy-guard-ai-roan.vercel.app)
 
-People use social media, messaging apps, browsers, location services, email, and many other online services every day. However, many users do not know:
+### 💻 [View Source Code](https://github.com/jeevanabhi-r/PrivacyGuard-AI)
 
-- Whether their accounts are properly protected
-- Whether they reuse passwords
-- Whether two-step authentication is enabled
-- Who can see their social media information
-- Which applications have access to sensitive permissions
-- Whether location history is being stored
-- How browser tracking works
-- What email tracking pixels are
-- How to recognize phishing attempts
-- Which privacy setting they should change first
+</div>
 
-Privacy information is often scattered across different applications and buried inside complicated settings.
+---
 
-This creates **privacy fatigue**.
+## 🎯 The Problem
 
-Users know privacy is important, but they do not know:
+Digital privacy is becoming harder to understand.
 
-> **"What should I do next?"**
+Most people don't know:
+
+- 🔐 Whether their accounts are properly protected
+- 📱 Which apps have access to their data
+- 📍 Who can access their location
+- 👥 How much information they expose on social media
+- 🌐 How much tracking happens while browsing
+- ⚠️ What privacy settings they should actually change
+
+Privacy policies are long and technical. Privacy tools can be complicated.
+
+### People don't need more warnings.
+
+### They need to know **what to do next.**
 
 ---
 
 # 💡 Our Solution
 
-PrivacyGuard AI bridges the gap between:
+## PrivacyGuard AI
 
-> **Knowing privacy matters**
+PrivacyGuard AI is a **digital privacy companion** that turns confusing privacy problems into simple, actionable steps.
 
-and
-
-> **Knowing what action to take next.**
-
-The application evaluates a user's privacy habits through a short interactive assessment.
-
-It then:
-
-1. Calculates a privacy score from 0–100
-2. Breaks the score into privacy categories
-3. Identifies the user's highest-risk areas
-4. Prioritizes recommended actions
-5. Connects users to relevant privacy guides
-6. Provides short educational lessons
-7. Tests understanding through quizzes
-8. Provides an AI Privacy Assistant
-9. Tracks completed learning and actions
-10. Allows users to reassess their privacy progress
+```text
+       🔍 ASSESS
+           ↓
+       📊 SCORE
+           ↓
+       ⚠️ UNDERSTAND RISKS
+           ↓
+       ✅ TAKE ACTION
+           ↓
+       📚 LEARN
+           ↓
+       🤖 ASK AI
+           ↓
+       📈 IMPROVE
+```
 
 ---
 
-# 👥 Target Users
+# ✨ What You Can Do
 
-PrivacyGuard AI is designed for:
+<table>
+<tr>
+<td width="50%">
 
-- Everyday internet users
-- Non-technical users
-- Students
-- Professionals
-- People who want to improve their digital privacy
-- Users who feel overwhelmed by complicated privacy settings
+### 🔍 Privacy Audit
 
-The platform does not assume that the user has cybersecurity knowledge.
+Take a simple **10-question assessment** covering:
+
+- Account Security
+- Social Media Privacy
+- Location Privacy
+- App Permissions
+- Browser Safety
+
+</td>
+
+<td width="50%">
+
+### 📊 Privacy Score
+
+Get a transparent **0–100 Privacy Score** with:
+
+- Category breakdown
+- Risk identification
+- Priority recommendations
+- Action plan
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### ✅ Privacy Actions
+
+Create and manage your own privacy actions.
+
+**Full CRUD support:**
+
+- Create
+- Read
+- Update
+- Complete
+- Delete
+
+</td>
+
+<td>
+
+### 🤖 AI Privacy Assistant
+
+Ask privacy questions in simple language and receive practical guidance powered by **Groq AI**.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### 📚 Privacy Learning
+
+Learn through:
+
+- Privacy Guides
+- Short Lessons
+- Interactive Quizzes
+
+</td>
+
+<td>
+
+### 🌗 Dark & Light Mode
+
+A polished privacy-focused interface with:
+
+- Dark Mode
+- Light Mode
+- Responsive design
+- Accessible components
+
+</td>
+</tr>
+</table>
 
 ---
 
-# 🌟 What Makes PrivacyGuard AI Different?
+# 📸 Product Preview
 
-## 1. A Calmer Kind of Privacy
+> Add your actual screenshots inside `docs/screenshots/`.
 
-PrivacyGuard AI intentionally avoids fear-mongering.
+### 🏠 Privacy Dashboard
 
-Instead of:
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" width="90%" />
+</p>
 
-> "You are being hacked!"
+### 🔍 Privacy Audit
 
-the platform focuses on:
+<p align="center">
+  <img src="docs/screenshots/privacy-audit.png" width="90%" />
+</p>
 
-> "Here is your risk, here is why it matters, and here is what you can do next."
+### 📊 Privacy Score & Risks
 
-The goal is to make privacy understandable rather than frightening.
+<p align="center">
+  <img src="docs/screenshots/privacy-score.png" width="90%" />
+</p>
+
+### ✅ Privacy Actions
+
+<p align="center">
+  <img src="docs/screenshots/privacy-actions.png" width="90%" />
+</p>
+
+### 🤖 AI Privacy Assistant
+
+<p align="center">
+  <img src="docs/screenshots/ai-assistant.png" width="90%" />
+</p>
 
 ---
 
-## 2. Privacy Is Measurable
+# 🔐 Privacy-First by Design
 
-Instead of giving users a large list of generic privacy tips, PrivacyGuard AI provides a measurable:
+PrivacyGuard AI follows a **zero-credential approach**.
 
-### Privacy Score: 0–100
+We never ask users for:
 
-This gives users an easy way to understand their current privacy posture.
+```text
+❌ Passwords
+❌ OTPs
+❌ API Keys
+❌ Session Cookies
+❌ Private Keys
+❌ Recovery Codes
+❌ Banking Credentials
+```
+
+> **PrivacyGuard teaches users how to protect their accounts without requiring access to them.**
 
 ---
 
-## 3. Risk Prioritization
+# 🧠 AI Architecture
 
-The platform does not simply show dozens of warnings.
+```text
+                         USER
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │  React Frontend │
+                  └────────┬────────┘
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │ Supabase Auth   │
+                  └────────┬────────┘
+                           │
+                           ▼
+              ┌─────────────────────────┐
+              │ Supabase Edge Function  │
+              │                         │
+              │ • Authentication        │
+              │ • Validation            │
+              │ • Rate Limiting         │
+              │ • History Persistence   │
+              └────────────┬────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │    GROQ     │
+                    │     AI      │
+                    └─────────────┘
+```
 
-It identifies important weaknesses and prioritizes them.
+### AI Model
 
-For example:
+```text
+Provider: Groq
+Model: openai/gpt-oss-120b
+```
 
-                     PRIVACYGUARD AI
-                            │
-                            ▼
-                    React + TypeScript
-                            │
-             ┌──────────────┼──────────────┐
-             │              │              │
-             ▼              ▼              ▼
-       Privacy Audit      Guides        Lessons
-             │              │              │
-             └──────────────┼──────────────┘
-                            │
-                            ▼
-                    Supabase Platform
-                            │
-          ┌─────────────────┼─────────────────┐
-          │                 │                 │
-          ▼                 ▼                 ▼
-       Auth             PostgreSQL       Edge Function
-                                              │
-                                              ▼
-                                           Groq AI
+The Groq API key is stored only as a **Supabase Edge Function secret**.
+
+---
+
+# 🛡️ Security
+
+- 🔒 Supabase Authentication
+- 🧱 PostgreSQL Row Level Security
+- 🚦 Database-backed AI rate limiting
+- 🔑 Secrets kept out of frontend and GitHub
+- 👤 User-owned Privacy Actions
+
+```text
+User A → Only User A's Actions
+User B → Only User B's Actions
+```
+
+---
+
+# 📊 Privacy Score
+
+Each audit contains **10 questions** across **5 privacy dimensions**.
+
+| Dimension | Questions |
+|---|---:|
+| 🔐 Account Security | 2 |
+| 👥 Social Media Privacy | 2 |
+| 📍 Location Privacy | 2 |
+| 📱 App Permissions | 2 |
+| 🌐 Browser Safety | 2 |
+
+### Scoring
+
+```text
+YES          → 10 points
+I'M NOT SURE →  5 points
+NO           →  0 points
+```
+
+### Rating
+
+```text
+90–100  🟢 Excellent
+75–89   🟢 Good
+50–74   🟡 Needs Attention
+0–49    🔴 High Risk
+```
+
+---
+
+# ✅ Privacy Actions CRUD
+
+Users can create and manage personal privacy actions.
+
+### Create
+Create a custom privacy action.
+
+### Read
+View all saved privacy actions.
+
+### Update
+Edit details or completion status.
+
+### Delete
+Remove an action permanently.
+
+### Database
+
+```text
+privacy_actions
+├── id
+├── user_id
+├── title
+├── description
+├── category
+├── priority
+├── completed
+├── created_at
+└── updated_at
+```
+
+Protected using **Supabase Row Level Security**.
+
+---
+
+# 📚 Learn Privacy
+
+### Guides
+
+- 🔐 Privacy Basics
+- 📍 Location Sharing
+- 🏢 Data Brokers
+- 📧 Inbox Tracking
+
+### Short Lessons
+
+- 🔑 Password Security
+- 🔐 Two-Step Sign-In
+- 🎣 Phishing
+
+### Quizzes
+
+Interactive questions help users verify what they learned.
+
+---
+
+# 🏗️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React + TypeScript |
+| Build Tool | Vite |
+| UI | Tailwind CSS + shadcn/ui |
+| Icons | Lucide |
+| Authentication | Supabase Auth |
+| Database | PostgreSQL |
+| Backend | Supabase Edge Functions |
+| Security | Row Level Security |
+| AI | Groq |
+| AI Model | `openai/gpt-oss-120b` |
+| Deployment | Vercel |
+| Version Control | GitHub |
+
+---
+
+# 🚀 Run Locally
+
+```bash
+git clone https://github.com/jeevanabhi-r/PrivacyGuard-AI.git
+cd PrivacyGuard-AI
+pnpm install
+```
+
+Configure:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Then:
+
+```bash
+pnpm --filter @workspace/privacyguard run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+### Verify
+
+```bash
+pnpm run typecheck
+```
+
+```bash
+pnpm --filter @workspace/privacyguard run build
+```
+
+---
+
+# 🏆 Hackathon Story
+
+```text
+      "How private am I?"
+               │
+               ▼
+        🔍 Privacy Audit
+               │
+               ▼
+         📊 Privacy Score
+               │
+               ▼
+        ⚠️ Identify Risks
+               │
+               ▼
+        ✅ Take Actions
+               │
+               ▼
+          📚 Learn
+               │
+               ▼
+          🤖 Ask AI
+               │
+               ▼
+        📈 Improve Privacy
+```
+
+---
+
+# 💚 Our Philosophy
+
+> **Privacy is a practice, not a test.**
+
+PrivacyGuard AI doesn't try to scare users.
+
+It gives them a clear understanding of their risks and lets them improve **one action at a time**.
+
+---
+
+<div align="center">
+
+# 🛡️ PrivacyGuard AI
+
+### Your digital privacy, simplified.
+
+**Assess • Understand • Act • Learn • Improve**
+
+<br>
+
+[🚀 Live Demo](https://privacy-guard-ai-roan.vercel.app) · [💻 GitHub](https://github.com/jeevanabhi-r/PrivacyGuard-AI)
+
+<br>
+
+Made with 💚 for BUILD-TO-SHIP
+
+</div>
